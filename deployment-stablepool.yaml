@@ -4,7 +4,7 @@
 
 manifestVersion: subsquid.io/v0.1
 name: hydration-storage-dictionary
-slot: 401
+slot: 402
 description: Hydration storage dictionary for Stablepool storage
 build:
 deploy:

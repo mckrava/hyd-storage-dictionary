@@ -23,3 +23,19 @@ export function hexToStrWithNullCharCheck(str?: string) {
   const decorated = hexToString(str);
   return decorated.includes('\0') ? str : decorated;
 }
+
+export function* splitIntoBatches<T>(
+  list: T[],
+  maxBatchSize: number
+): Generator<T[]> {
+  if (list.length <= maxBatchSize) {
+    yield list;
+  } else {
+    let offset = 0;
+    while (list.length - offset > maxBatchSize) {
+      yield list.slice(offset, offset + maxBatchSize);
+      offset += maxBatchSize;
+    }
+    yield list.slice(offset);
+  }
+}

@@ -4,7 +4,7 @@
 
 manifestVersion: subsquid.io/v0.1
 name: hydration-storage-dictionary
-slot: 201
+slot: 202
 description: Hydration storage dictionary for XYK pool storage
 build:
 deploy:
