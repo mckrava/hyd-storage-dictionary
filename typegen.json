@@ -1,0 +1,21 @@
+{
+  "outDir": "src/typegenTypes",
+  "specVersions": "https://v2.archive.subsquid.io/metadata/hydradx",
+  "pallets": {
+    "System": {
+      "storage": ["Account"]
+    },
+    "Tokens": {
+      "storage": ["Accounts"]
+    },
+    "XYK": {
+      "storage": ["PoolAssets"]
+    },
+    "Omnipool": {
+      "storage": ["Assets"]
+    },
+    "Stableswap": {
+      "storage": ["Pools"]
+    },
+  }
+}
