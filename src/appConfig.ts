@@ -75,6 +75,32 @@ export class AppConfig {
   @IsNotEmpty()
   readonly ALL_STATE_SCHEMAS_LIST: string[] = ['squid_processor'];
 
+  @Transform(({ value }: { value: string }) => +value)
+  @IsNotEmpty()
+  readonly INDEXER_MAX_SUB_BATCH_SIZE: number = 1500;
+
+  @Transform(({ value }: { value: string }) => +value)
+  @IsNotEmpty()
+  readonly SUB_BATCH_MAX_TIMEOUT_MS: number = 500;
+
+  @Transform(({ value }: { value: string }) => +value)
+  readonly INDEXER_SUB_PROCESSORS_NUMBER: number = 5;
+
+  @Transform(
+    ({ value }: { value: string }) =>
+      new Map(
+        value.split(';').map((str) => {
+          const parsedRange = str.split(':');
+          return [
+            parsedRange[0],
+            { from: +parsedRange[1], to: +parsedRange[2] },
+          ];
+        })
+      )
+  )
+  readonly SUB_PROCESSORS_RANGES: Map<string, { from: number; to: number }> =
+    new Map();
+
   static getInstance(): AppConfig {
     if (!AppConfig.instance) {
       AppConfig.instance = new AppConfig();

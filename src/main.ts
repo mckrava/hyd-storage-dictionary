@@ -7,6 +7,8 @@ import { handleXykPoolsStorage } from './handlers/xykPool';
 import { handleOmnipoolStorage } from './handlers/omnipoolPool';
 import { handleStablepoolStorage } from './handlers/stablepool';
 import { splitIntoBatches } from './utils/helpers';
+import * as crypto from 'node:crypto';
+import { SubProcessorStatusManager } from './utils/subProcessorStatusManager';
 
 const appConfig = AppConfig.getInstance();
 
@@ -25,13 +27,21 @@ processor.run(
     (ctxWithBatchState as ProcessorContext<Store>).appConfig =
       AppConfig.getInstance();
 
+    const subProcessorStatusManager = new SubProcessorStatusManager(
+      ctxWithBatchState as ProcessorContext<Store>
+    );
+    await subProcessorStatusManager.calcSubBatchConfig();
+
     console.log(`Batch size - ${ctx.blocks.length} blocks.`);
 
     console.time(`Blocks batch has been processed in`);
     let blocksSubBatchIndex = 1;
-    for (const blocksSubBatch of splitIntoBatches(ctx.blocks, 900)) {
+    for (const blocksSubBatch of splitIntoBatches(
+      ctx.blocks,
+      subProcessorStatusManager.subBatchConfig.subBatchSize
+    )) {
       console.time(
-        `Blocks sub-batch #${blocksSubBatchIndex} with size 900 blocks has been processed in`
+        `Blocks sub-batch #${blocksSubBatchIndex} with size ${subProcessorStatusManager.subBatchConfig.subBatchSize} blocks has been processed in`
       );
       await Promise.all(
         blocksSubBatch.map(async (block) => {
@@ -53,8 +63,14 @@ processor.run(
         })
       );
       console.timeEnd(
-        `Blocks sub-batch #${blocksSubBatchIndex} with size 900 blocks has been processed in`
+        `Blocks sub-batch #${blocksSubBatchIndex} with size ${subProcessorStatusManager.subBatchConfig.subBatchSize} blocks has been processed in`
       );
+      const exactTimeout = crypto.randomInt(
+        0,
+        appConfig.SUB_BATCH_MAX_TIMEOUT_MS
+      );
+      await new Promise((res) => setTimeout(res, exactTimeout));
+      console.log(`Sub-batch timeout: ${exactTimeout}ms.`);
       blocksSubBatchIndex++;
     }
     console.timeEnd(`Blocks batch has been processed in`);
@@ -81,7 +97,9 @@ processor.run(
         ...batchState.state.stablepoolAssetsData.values(),
       ]);
     }
-
+    await subProcessorStatusManager.setSubProcessorStatus(
+      ctx.blocks[ctx.blocks.length - 1].header.height
+    );
     console.log('Batch complete');
   }
 );

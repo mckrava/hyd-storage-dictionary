@@ -142,6 +142,40 @@ type Query {
     filter: StablepoolAssetDatumFilter
   ): StablepoolAssetDataConnection
 
+  """Reads and enables pagination through a set of `SubProcessorStatus`."""
+  subProcessorStatuses(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `SubProcessorStatus`."""
+    orderBy: [SubProcessorStatusesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SubProcessorStatusCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SubProcessorStatusFilter
+  ): SubProcessorStatusesConnection
+
   """Reads and enables pagination through a set of `XykPool`."""
   xykPools(
     """Only read the first `n` values of the set."""
@@ -213,6 +247,7 @@ type Query {
   omnipoolAssetDatum(id: String!): OmnipoolAssetDatum
   stablepool(id: String!): Stablepool
   stablepoolAssetDatum(id: String!): StablepoolAssetDatum
+  subProcessorStatus(id: String!): SubProcessorStatus
   xykPool(id: String!): XykPool
   xykPoolAssetsDatum(id: String!): XykPoolAssetsDatum
   _squidStatus: [_ProcessorStatus!]!
@@ -2191,6 +2226,351 @@ input StablepoolFilter {
 
   """Negates the expression."""
   not: StablepoolFilter
+}
+
+"""A connection to a list of `SubProcessorStatus` values."""
+type SubProcessorStatusesConnection {
+  """A list of `SubProcessorStatus` objects."""
+  nodes: [SubProcessorStatus]!
+
+  """
+  A list of edges which contains the `SubProcessorStatus` and cursor to aid in pagination.
+  """
+  edges: [SubProcessorStatusesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `SubProcessorStatus` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: SubProcessorStatusAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping `SubProcessorStatus` for these aggregates.
+    """
+    groupBy: [SubProcessorStatusGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: SubProcessorStatusHavingInput
+  ): [SubProcessorStatusAggregates!]
+}
+
+type SubProcessorStatus {
+  id: String!
+  fromBlock: Int!
+  toBlock: Int!
+  height: Int!
+}
+
+"""A `SubProcessorStatus` edge in the connection."""
+type SubProcessorStatusesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `SubProcessorStatus` at the end of the edge."""
+  node: SubProcessorStatus
+}
+
+type SubProcessorStatusAggregates {
+  keys: [String!]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: SubProcessorStatusSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: SubProcessorStatusDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: SubProcessorStatusMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: SubProcessorStatusMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: SubProcessorStatusAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: SubProcessorStatusStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: SubProcessorStatusStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: SubProcessorStatusVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: SubProcessorStatusVariancePopulationAggregates
+}
+
+type SubProcessorStatusSumAggregates {
+  """Sum of fromBlock across the matching connection"""
+  fromBlock: BigInt!
+
+  """Sum of toBlock across the matching connection"""
+  toBlock: BigInt!
+
+  """Sum of height across the matching connection"""
+  height: BigInt!
+}
+
+type SubProcessorStatusDistinctCountAggregates {
+  """Distinct count of id across the matching connection"""
+  id: BigInt
+
+  """Distinct count of fromBlock across the matching connection"""
+  fromBlock: BigInt
+
+  """Distinct count of toBlock across the matching connection"""
+  toBlock: BigInt
+
+  """Distinct count of height across the matching connection"""
+  height: BigInt
+}
+
+type SubProcessorStatusMinAggregates {
+  """Minimum of fromBlock across the matching connection"""
+  fromBlock: Int
+
+  """Minimum of toBlock across the matching connection"""
+  toBlock: Int
+
+  """Minimum of height across the matching connection"""
+  height: Int
+}
+
+type SubProcessorStatusMaxAggregates {
+  """Maximum of fromBlock across the matching connection"""
+  fromBlock: Int
+
+  """Maximum of toBlock across the matching connection"""
+  toBlock: Int
+
+  """Maximum of height across the matching connection"""
+  height: Int
+}
+
+type SubProcessorStatusAverageAggregates {
+  """Mean average of fromBlock across the matching connection"""
+  fromBlock: BigFloat
+
+  """Mean average of toBlock across the matching connection"""
+  toBlock: BigFloat
+
+  """Mean average of height across the matching connection"""
+  height: BigFloat
+}
+
+type SubProcessorStatusStddevSampleAggregates {
+  """Sample standard deviation of fromBlock across the matching connection"""
+  fromBlock: BigFloat
+
+  """Sample standard deviation of toBlock across the matching connection"""
+  toBlock: BigFloat
+
+  """Sample standard deviation of height across the matching connection"""
+  height: BigFloat
+}
+
+type SubProcessorStatusStddevPopulationAggregates {
+  """
+  Population standard deviation of fromBlock across the matching connection
+  """
+  fromBlock: BigFloat
+
+  """
+  Population standard deviation of toBlock across the matching connection
+  """
+  toBlock: BigFloat
+
+  """Population standard deviation of height across the matching connection"""
+  height: BigFloat
+}
+
+type SubProcessorStatusVarianceSampleAggregates {
+  """Sample variance of fromBlock across the matching connection"""
+  fromBlock: BigFloat
+
+  """Sample variance of toBlock across the matching connection"""
+  toBlock: BigFloat
+
+  """Sample variance of height across the matching connection"""
+  height: BigFloat
+}
+
+type SubProcessorStatusVariancePopulationAggregates {
+  """Population variance of fromBlock across the matching connection"""
+  fromBlock: BigFloat
+
+  """Population variance of toBlock across the matching connection"""
+  toBlock: BigFloat
+
+  """Population variance of height across the matching connection"""
+  height: BigFloat
+}
+
+"""
+Grouping methods for `SubProcessorStatus` for usage during aggregation.
+"""
+enum SubProcessorStatusGroupBy {
+  FROM_BLOCK
+  TO_BLOCK
+  HEIGHT
+}
+
+"""Conditions for `SubProcessorStatus` aggregates."""
+input SubProcessorStatusHavingInput {
+  AND: [SubProcessorStatusHavingInput!]
+  OR: [SubProcessorStatusHavingInput!]
+  sum: SubProcessorStatusHavingSumInput
+  distinctCount: SubProcessorStatusHavingDistinctCountInput
+  min: SubProcessorStatusHavingMinInput
+  max: SubProcessorStatusHavingMaxInput
+  average: SubProcessorStatusHavingAverageInput
+  stddevSample: SubProcessorStatusHavingStddevSampleInput
+  stddevPopulation: SubProcessorStatusHavingStddevPopulationInput
+  varianceSample: SubProcessorStatusHavingVarianceSampleInput
+  variancePopulation: SubProcessorStatusHavingVariancePopulationInput
+}
+
+input SubProcessorStatusHavingSumInput {
+  fromBlock: HavingIntFilter
+  toBlock: HavingIntFilter
+  height: HavingIntFilter
+}
+
+input SubProcessorStatusHavingDistinctCountInput {
+  fromBlock: HavingIntFilter
+  toBlock: HavingIntFilter
+  height: HavingIntFilter
+}
+
+input SubProcessorStatusHavingMinInput {
+  fromBlock: HavingIntFilter
+  toBlock: HavingIntFilter
+  height: HavingIntFilter
+}
+
+input SubProcessorStatusHavingMaxInput {
+  fromBlock: HavingIntFilter
+  toBlock: HavingIntFilter
+  height: HavingIntFilter
+}
+
+input SubProcessorStatusHavingAverageInput {
+  fromBlock: HavingIntFilter
+  toBlock: HavingIntFilter
+  height: HavingIntFilter
+}
+
+input SubProcessorStatusHavingStddevSampleInput {
+  fromBlock: HavingIntFilter
+  toBlock: HavingIntFilter
+  height: HavingIntFilter
+}
+
+input SubProcessorStatusHavingStddevPopulationInput {
+  fromBlock: HavingIntFilter
+  toBlock: HavingIntFilter
+  height: HavingIntFilter
+}
+
+input SubProcessorStatusHavingVarianceSampleInput {
+  fromBlock: HavingIntFilter
+  toBlock: HavingIntFilter
+  height: HavingIntFilter
+}
+
+input SubProcessorStatusHavingVariancePopulationInput {
+  fromBlock: HavingIntFilter
+  toBlock: HavingIntFilter
+  height: HavingIntFilter
+}
+
+"""Methods to use when ordering `SubProcessorStatus`."""
+enum SubProcessorStatusesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  FROM_BLOCK_ASC
+  FROM_BLOCK_DESC
+  TO_BLOCK_ASC
+  TO_BLOCK_DESC
+  HEIGHT_ASC
+  HEIGHT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `SubProcessorStatus` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input SubProcessorStatusCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: String
+
+  """Checks for equality with the object’s `fromBlock` field."""
+  fromBlock: Int
+
+  """Checks for equality with the object’s `toBlock` field."""
+  toBlock: Int
+
+  """Checks for equality with the object’s `height` field."""
+  height: Int
+}
+
+"""
+A filter to be used against `SubProcessorStatus` object types. All fields are combined with a logical ‘and.’
+"""
+input SubProcessorStatusFilter {
+  """Filter by the object’s `id` field."""
+  id: StringFilter
+
+  """Filter by the object’s `fromBlock` field."""
+  fromBlock: IntFilter
+
+  """Filter by the object’s `toBlock` field."""
+  toBlock: IntFilter
+
+  """Filter by the object’s `height` field."""
+  height: IntFilter
+
+  """Checks for all expressions in this list."""
+  and: [SubProcessorStatusFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [SubProcessorStatusFilter!]
+
+  """Negates the expression."""
+  not: SubProcessorStatusFilter
 }
 
 """A connection to a list of `XykPool` values."""

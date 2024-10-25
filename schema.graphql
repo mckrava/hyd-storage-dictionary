@@ -2,6 +2,14 @@
 # *** Common entities and types ***
 # ======================================================================================================================
 
+type SubProcessorStatus @entity {
+  "sub_processor_schema_name"
+  id: ID!
+  fromBlock: Int!
+  toBlock: Int!
+  height: Int!
+}
+
 type AccountBalances {
   free: BigInt!
   reserved: BigInt!
