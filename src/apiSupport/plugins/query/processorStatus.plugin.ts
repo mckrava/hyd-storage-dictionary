@@ -56,8 +56,10 @@ export const ProcessorStatusPlugin: Plugin = makeExtendSchemaPlugin(
             return (
               rows.map((row) => ({
                 ...row,
-                batchBlockFrom: appConfig.START_BLOCK,
-                batchBlockTo: appConfig.END_BLOCK,
+                batchBlockFrom:
+                  appConfig.SUB_PROCESSORS_RANGES.get(row.name)?.from ?? 0,
+                batchBlockTo:
+                  appConfig.SUB_PROCESSORS_RANGES.get(row.name)?.to ?? 0,
               })) || []
             );
           },

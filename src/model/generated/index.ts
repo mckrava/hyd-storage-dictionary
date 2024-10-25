@@ -1,3 +1,4 @@
+export * from "./subProcessorStatus.model"
 export * from "./xykPool.model"
 export * from "./xykPoolAssetsData.model"
 export * from "./_accountBalances"
