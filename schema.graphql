@@ -32,6 +32,38 @@ type OmnipoolAssetState {
 }
 
 # ======================================================================================================================
+# *** LBP Pool ***
+# ======================================================================================================================
+
+type LbpPool @entity {
+  "xykPoolAddress-paraChainBlockHeight"
+  id: ID!
+  "XYK pool address"
+  poolAddress: String! @index
+  assetAId: Int! @index
+  assetBId: Int! @index
+  owner: String!
+  start: Int
+  end: Int
+  initialWeight: Int!
+  finalWeight: Int!
+  weightCurve: String!
+  fee: [Int!]!
+  feeCollector: String
+  repayTarget: BigInt!
+  paraChainBlockHeight: Int! @index
+  assets: [LbpPoolAssetsData!]! @derivedFrom(field: "pool")
+}
+type LbpPoolAssetsData @entity {
+  "xykPoolAddress-assetId-paraChainBlockHeight"
+  id: ID!
+  pool: LbpPool!
+  assetId: Int! @index
+  balances: AccountBalances!
+  paraChainBlockHeight: Int! @index
+}
+
+# ======================================================================================================================
 # *** XYK Pool ***
 # ======================================================================================================================
 
@@ -49,7 +81,6 @@ type XykPoolAssetsData @entity {
   "xykPoolAddress-assetId-paraChainBlockHeight"
   id: ID!
   pool: XykPool!
-  #  poolAddress: String! @index
   assetId: Int! @index
   balances: AccountBalances!
   paraChainBlockHeight: Int! @index

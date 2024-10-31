@@ -1,4 +1,5 @@
 import { AccountBalances } from '../../model';
+import { sts } from '../../typegenTypes/support';
 
 export interface AccountData {
   free: bigint;
@@ -40,6 +41,25 @@ export interface XykPoolWithAssets {
   poolAddress: string;
   assetAId: number;
   assetBId: number;
+}
+
+export type LbpWeightCurveType = {
+  __kind: string;
+};
+
+export interface LbpPoolData {
+  poolAddress: string;
+  owner: string;
+  start?: number;
+  end?: number;
+  assetAId: number;
+  assetBId: number;
+  initialWeight: number;
+  finalWeight: number;
+  weightCurve: LbpWeightCurveType;
+  fee: number[];
+  feeCollector: string;
+  repayTarget: bigint;
 }
 
 export interface PoolAssetBalances {

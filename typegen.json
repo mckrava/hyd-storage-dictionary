@@ -8,6 +8,9 @@
     "Tokens": {
       "storage": ["Accounts"]
     },
+    "LBP": {
+      "storage": ["PoolData"]
+    },
     "XYK": {
       "storage": ["PoolAssets"]
     },

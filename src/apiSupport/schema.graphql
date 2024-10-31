@@ -6,6 +6,74 @@ type Query {
   """
   query: Query!
 
+  """Reads and enables pagination through a set of `LbpPool`."""
+  lbpPools(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `LbpPool`."""
+    orderBy: [LbpPoolsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LbpPoolCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LbpPoolFilter
+  ): LbpPoolsConnection
+
+  """Reads and enables pagination through a set of `LbpPoolAssetsDatum`."""
+  lbpPoolAssetsData(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `LbpPoolAssetsDatum`."""
+    orderBy: [LbpPoolAssetsDataOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LbpPoolAssetsDatumCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LbpPoolAssetsDatumFilter
+  ): LbpPoolAssetsDataConnection
+
   """Reads and enables pagination through a set of `Migration`."""
   migrations(
     """Only read the first `n` values of the set."""
@@ -243,6 +311,8 @@ type Query {
     """
     filter: XykPoolAssetsDatumFilter
   ): XykPoolAssetsDataConnection
+  lbpPool(id: String!): LbpPool
+  lbpPoolAssetsDatum(id: String!): LbpPoolAssetsDatum
   migration(id: Int!): Migration
   omnipoolAssetDatum(id: String!): OmnipoolAssetDatum
   stablepool(id: String!): Stablepool
@@ -254,59 +324,155 @@ type Query {
   _apiSupport: ApiSupportResponse
 }
 
-"""A connection to a list of `Migration` values."""
-type MigrationsConnection {
-  """A list of `Migration` objects."""
-  nodes: [Migration]!
+"""A connection to a list of `LbpPool` values."""
+type LbpPoolsConnection {
+  """A list of `LbpPool` objects."""
+  nodes: [LbpPool]!
 
   """
-  A list of edges which contains the `Migration` and cursor to aid in pagination.
+  A list of edges which contains the `LbpPool` and cursor to aid in pagination.
   """
-  edges: [MigrationsEdge!]!
+  edges: [LbpPoolsEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """The count of *all* `Migration` you could get from the connection."""
+  """The count of *all* `LbpPool` you could get from the connection."""
   totalCount: Int!
 
   """
   Aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  aggregates: MigrationAggregates
+  aggregates: LbpPoolAggregates
 
   """
   Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   groupedAggregates(
-    """The method to use when grouping `Migration` for these aggregates."""
-    groupBy: [MigrationsGroupBy!]!
+    """The method to use when grouping `LbpPool` for these aggregates."""
+    groupBy: [LbpPoolGroupBy!]!
 
     """Conditions on the grouped aggregates."""
-    having: MigrationsHavingInput
-  ): [MigrationAggregates!]
+    having: LbpPoolHavingInput
+  ): [LbpPoolAggregates!]
 }
 
-type Migration {
-  id: Int!
-  timestamp: BigInt!
-  name: String!
+type LbpPool {
+  id: String!
+  poolAddress: String!
+  assetAId: Int!
+  assetBId: Int!
+  owner: String!
+  start: Int
+  end: Int
+  initialWeight: Int!
+  finalWeight: Int!
+  weightCurve: String!
+  fee: [Int]!
+  feeCollector: String
+  repayTarget: BigFloat!
+  paraChainBlockHeight: Int!
+
+  """Reads and enables pagination through a set of `LbpPoolAssetsDatum`."""
+  lbpPoolAssetsDataByPoolId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `LbpPoolAssetsDatum`."""
+    orderBy: [LbpPoolAssetsDataOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LbpPoolAssetsDatumCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LbpPoolAssetsDatumFilter
+  ): LbpPoolAssetsDataConnection!
 }
 
 """
-A signed eight-byte integer. The upper big integer values are greater than the
-max value for a JavaScript number. Therefore all big integers will be output as
-strings and not numbers.
+A floating point number that requires more precision than IEEE 754 binary 64
 """
-scalar BigInt
+scalar BigFloat
 
-"""A `Migration` edge in the connection."""
-type MigrationsEdge {
+"""A connection to a list of `LbpPoolAssetsDatum` values."""
+type LbpPoolAssetsDataConnection {
+  """A list of `LbpPoolAssetsDatum` objects."""
+  nodes: [LbpPoolAssetsDatum]!
+
+  """
+  A list of edges which contains the `LbpPoolAssetsDatum` and cursor to aid in pagination.
+  """
+  edges: [LbpPoolAssetsDataEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `LbpPoolAssetsDatum` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: LbpPoolAssetsDatumAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping `LbpPoolAssetsDatum` for these aggregates.
+    """
+    groupBy: [LbpPoolAssetsDataGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: LbpPoolAssetsDataHavingInput
+  ): [LbpPoolAssetsDatumAggregates!]
+}
+
+type LbpPoolAssetsDatum {
+  id: String!
+  assetId: Int!
+  balances: JSON!
+  paraChainBlockHeight: Int!
+  poolId: String
+
+  """Reads a single `LbpPool` that is related to this `LbpPoolAssetsDatum`."""
+  pool: LbpPool
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""A `LbpPoolAssetsDatum` edge in the connection."""
+type LbpPoolAssetsDataEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The `Migration` at the end of the edge."""
-  node: Migration
+  """The `LbpPoolAssetsDatum` at the end of the edge."""
+  node: LbpPoolAssetsDatum
 }
 
 """A location in a connection that can be used for resuming pagination."""
@@ -327,161 +493,179 @@ type PageInfo {
   endCursor: Cursor
 }
 
-type MigrationAggregates {
+type LbpPoolAssetsDatumAggregates {
   keys: [String!]
 
   """
   Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  sum: MigrationSumAggregates
+  sum: LbpPoolAssetsDatumSumAggregates
 
   """
   Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  distinctCount: MigrationDistinctCountAggregates
+  distinctCount: LbpPoolAssetsDatumDistinctCountAggregates
 
   """
   Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  min: MigrationMinAggregates
+  min: LbpPoolAssetsDatumMinAggregates
 
   """
   Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  max: MigrationMaxAggregates
+  max: LbpPoolAssetsDatumMaxAggregates
 
   """
   Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  average: MigrationAverageAggregates
+  average: LbpPoolAssetsDatumAverageAggregates
 
   """
   Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  stddevSample: MigrationStddevSampleAggregates
+  stddevSample: LbpPoolAssetsDatumStddevSampleAggregates
 
   """
   Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  stddevPopulation: MigrationStddevPopulationAggregates
+  stddevPopulation: LbpPoolAssetsDatumStddevPopulationAggregates
 
   """
   Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  varianceSample: MigrationVarianceSampleAggregates
+  varianceSample: LbpPoolAssetsDatumVarianceSampleAggregates
 
   """
   Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  variancePopulation: MigrationVariancePopulationAggregates
+  variancePopulation: LbpPoolAssetsDatumVariancePopulationAggregates
 }
 
-type MigrationSumAggregates {
-  """Sum of id across the matching connection"""
-  id: BigInt!
+type LbpPoolAssetsDatumSumAggregates {
+  """Sum of assetId across the matching connection"""
+  assetId: BigInt!
 
-  """Sum of timestamp across the matching connection"""
-  timestamp: BigFloat!
+  """Sum of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: BigInt!
 }
 
 """
-A floating point number that requires more precision than IEEE 754 binary 64
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
 """
-scalar BigFloat
+scalar BigInt
 
-type MigrationDistinctCountAggregates {
+type LbpPoolAssetsDatumDistinctCountAggregates {
   """Distinct count of id across the matching connection"""
   id: BigInt
 
-  """Distinct count of timestamp across the matching connection"""
-  timestamp: BigInt
+  """Distinct count of assetId across the matching connection"""
+  assetId: BigInt
 
-  """Distinct count of name across the matching connection"""
-  name: BigInt
+  """Distinct count of balances across the matching connection"""
+  balances: BigInt
+
+  """Distinct count of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: BigInt
+
+  """Distinct count of poolId across the matching connection"""
+  poolId: BigInt
 }
 
-type MigrationMinAggregates {
-  """Minimum of id across the matching connection"""
-  id: Int
+type LbpPoolAssetsDatumMinAggregates {
+  """Minimum of assetId across the matching connection"""
+  assetId: Int
 
-  """Minimum of timestamp across the matching connection"""
-  timestamp: BigInt
+  """Minimum of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: Int
 }
 
-type MigrationMaxAggregates {
-  """Maximum of id across the matching connection"""
-  id: Int
+type LbpPoolAssetsDatumMaxAggregates {
+  """Maximum of assetId across the matching connection"""
+  assetId: Int
 
-  """Maximum of timestamp across the matching connection"""
-  timestamp: BigInt
+  """Maximum of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: Int
 }
 
-type MigrationAverageAggregates {
-  """Mean average of id across the matching connection"""
-  id: BigFloat
+type LbpPoolAssetsDatumAverageAggregates {
+  """Mean average of assetId across the matching connection"""
+  assetId: BigFloat
 
-  """Mean average of timestamp across the matching connection"""
-  timestamp: BigFloat
+  """Mean average of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: BigFloat
 }
 
-type MigrationStddevSampleAggregates {
-  """Sample standard deviation of id across the matching connection"""
-  id: BigFloat
-
-  """Sample standard deviation of timestamp across the matching connection"""
-  timestamp: BigFloat
-}
-
-type MigrationStddevPopulationAggregates {
-  """Population standard deviation of id across the matching connection"""
-  id: BigFloat
+type LbpPoolAssetsDatumStddevSampleAggregates {
+  """Sample standard deviation of assetId across the matching connection"""
+  assetId: BigFloat
 
   """
-  Population standard deviation of timestamp across the matching connection
+  Sample standard deviation of paraChainBlockHeight across the matching connection
   """
-  timestamp: BigFloat
+  paraChainBlockHeight: BigFloat
 }
 
-type MigrationVarianceSampleAggregates {
-  """Sample variance of id across the matching connection"""
-  id: BigFloat
+type LbpPoolAssetsDatumStddevPopulationAggregates {
+  """
+  Population standard deviation of assetId across the matching connection
+  """
+  assetId: BigFloat
 
-  """Sample variance of timestamp across the matching connection"""
-  timestamp: BigFloat
+  """
+  Population standard deviation of paraChainBlockHeight across the matching connection
+  """
+  paraChainBlockHeight: BigFloat
 }
 
-type MigrationVariancePopulationAggregates {
-  """Population variance of id across the matching connection"""
-  id: BigFloat
+type LbpPoolAssetsDatumVarianceSampleAggregates {
+  """Sample variance of assetId across the matching connection"""
+  assetId: BigFloat
 
-  """Population variance of timestamp across the matching connection"""
-  timestamp: BigFloat
+  """Sample variance of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: BigFloat
 }
 
-"""Grouping methods for `Migration` for usage during aggregation."""
-enum MigrationsGroupBy {
-  TIMESTAMP
-  NAME
+type LbpPoolAssetsDatumVariancePopulationAggregates {
+  """Population variance of assetId across the matching connection"""
+  assetId: BigFloat
+
+  """
+  Population variance of paraChainBlockHeight across the matching connection
+  """
+  paraChainBlockHeight: BigFloat
 }
 
-"""Conditions for `Migration` aggregates."""
-input MigrationsHavingInput {
-  AND: [MigrationsHavingInput!]
-  OR: [MigrationsHavingInput!]
-  sum: MigrationsHavingSumInput
-  distinctCount: MigrationsHavingDistinctCountInput
-  min: MigrationsHavingMinInput
-  max: MigrationsHavingMaxInput
-  average: MigrationsHavingAverageInput
-  stddevSample: MigrationsHavingStddevSampleInput
-  stddevPopulation: MigrationsHavingStddevPopulationInput
-  varianceSample: MigrationsHavingVarianceSampleInput
-  variancePopulation: MigrationsHavingVariancePopulationInput
+"""
+Grouping methods for `LbpPoolAssetsDatum` for usage during aggregation.
+"""
+enum LbpPoolAssetsDataGroupBy {
+  ASSET_ID
+  BALANCES
+  PARA_CHAIN_BLOCK_HEIGHT
+  POOL_ID
 }
 
-input MigrationsHavingSumInput {
-  id: HavingIntFilter
-  timestamp: HavingBigintFilter
+"""Conditions for `LbpPoolAssetsDatum` aggregates."""
+input LbpPoolAssetsDataHavingInput {
+  AND: [LbpPoolAssetsDataHavingInput!]
+  OR: [LbpPoolAssetsDataHavingInput!]
+  sum: LbpPoolAssetsDataHavingSumInput
+  distinctCount: LbpPoolAssetsDataHavingDistinctCountInput
+  min: LbpPoolAssetsDataHavingMinInput
+  max: LbpPoolAssetsDataHavingMaxInput
+  average: LbpPoolAssetsDataHavingAverageInput
+  stddevSample: LbpPoolAssetsDataHavingStddevSampleInput
+  stddevPopulation: LbpPoolAssetsDataHavingStddevPopulationInput
+  varianceSample: LbpPoolAssetsDataHavingVarianceSampleInput
+  variancePopulation: LbpPoolAssetsDataHavingVariancePopulationInput
+}
+
+input LbpPoolAssetsDataHavingSumInput {
+  assetId: HavingIntFilter
+  paraChainBlockHeight: HavingIntFilter
 }
 
 input HavingIntFilter {
@@ -493,188 +677,111 @@ input HavingIntFilter {
   lessThanOrEqualTo: Int
 }
 
-input HavingBigintFilter {
-  equalTo: BigInt
-  notEqualTo: BigInt
-  greaterThan: BigInt
-  greaterThanOrEqualTo: BigInt
-  lessThan: BigInt
-  lessThanOrEqualTo: BigInt
+input LbpPoolAssetsDataHavingDistinctCountInput {
+  assetId: HavingIntFilter
+  paraChainBlockHeight: HavingIntFilter
 }
 
-input MigrationsHavingDistinctCountInput {
-  id: HavingIntFilter
-  timestamp: HavingBigintFilter
+input LbpPoolAssetsDataHavingMinInput {
+  assetId: HavingIntFilter
+  paraChainBlockHeight: HavingIntFilter
 }
 
-input MigrationsHavingMinInput {
-  id: HavingIntFilter
-  timestamp: HavingBigintFilter
+input LbpPoolAssetsDataHavingMaxInput {
+  assetId: HavingIntFilter
+  paraChainBlockHeight: HavingIntFilter
 }
 
-input MigrationsHavingMaxInput {
-  id: HavingIntFilter
-  timestamp: HavingBigintFilter
+input LbpPoolAssetsDataHavingAverageInput {
+  assetId: HavingIntFilter
+  paraChainBlockHeight: HavingIntFilter
 }
 
-input MigrationsHavingAverageInput {
-  id: HavingIntFilter
-  timestamp: HavingBigintFilter
+input LbpPoolAssetsDataHavingStddevSampleInput {
+  assetId: HavingIntFilter
+  paraChainBlockHeight: HavingIntFilter
 }
 
-input MigrationsHavingStddevSampleInput {
-  id: HavingIntFilter
-  timestamp: HavingBigintFilter
+input LbpPoolAssetsDataHavingStddevPopulationInput {
+  assetId: HavingIntFilter
+  paraChainBlockHeight: HavingIntFilter
 }
 
-input MigrationsHavingStddevPopulationInput {
-  id: HavingIntFilter
-  timestamp: HavingBigintFilter
+input LbpPoolAssetsDataHavingVarianceSampleInput {
+  assetId: HavingIntFilter
+  paraChainBlockHeight: HavingIntFilter
 }
 
-input MigrationsHavingVarianceSampleInput {
-  id: HavingIntFilter
-  timestamp: HavingBigintFilter
+input LbpPoolAssetsDataHavingVariancePopulationInput {
+  assetId: HavingIntFilter
+  paraChainBlockHeight: HavingIntFilter
 }
 
-input MigrationsHavingVariancePopulationInput {
-  id: HavingIntFilter
-  timestamp: HavingBigintFilter
-}
-
-"""Methods to use when ordering `Migration`."""
-enum MigrationsOrderBy {
+"""Methods to use when ordering `LbpPoolAssetsDatum`."""
+enum LbpPoolAssetsDataOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
-  TIMESTAMP_ASC
-  TIMESTAMP_DESC
-  NAME_ASC
-  NAME_DESC
+  ASSET_ID_ASC
+  ASSET_ID_DESC
+  BALANCES_ASC
+  BALANCES_DESC
+  PARA_CHAIN_BLOCK_HEIGHT_ASC
+  PARA_CHAIN_BLOCK_HEIGHT_DESC
+  POOL_ID_ASC
+  POOL_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
 
 """
-A condition to be used against `Migration` object types. All fields are tested
-for equality and combined with a logical ‘and.’
+A condition to be used against `LbpPoolAssetsDatum` object types. All fields are
+tested for equality and combined with a logical ‘and.’
 """
-input MigrationCondition {
+input LbpPoolAssetsDatumCondition {
   """Checks for equality with the object’s `id` field."""
-  id: Int
+  id: String
 
-  """Checks for equality with the object’s `timestamp` field."""
-  timestamp: BigInt
+  """Checks for equality with the object’s `assetId` field."""
+  assetId: Int
 
-  """Checks for equality with the object’s `name` field."""
-  name: String
+  """Checks for equality with the object’s `balances` field."""
+  balances: JSON
+
+  """Checks for equality with the object’s `paraChainBlockHeight` field."""
+  paraChainBlockHeight: Int
+
+  """Checks for equality with the object’s `poolId` field."""
+  poolId: String
 }
 
 """
-A filter to be used against `Migration` object types. All fields are combined with a logical ‘and.’
+A filter to be used against `LbpPoolAssetsDatum` object types. All fields are combined with a logical ‘and.’
 """
-input MigrationFilter {
+input LbpPoolAssetsDatumFilter {
   """Filter by the object’s `id` field."""
-  id: IntFilter
+  id: StringFilter
 
-  """Filter by the object’s `timestamp` field."""
-  timestamp: BigIntFilter
+  """Filter by the object’s `assetId` field."""
+  assetId: IntFilter
 
-  """Filter by the object’s `name` field."""
-  name: StringFilter
+  """Filter by the object’s `balances` field."""
+  balances: JSONFilter
+
+  """Filter by the object’s `paraChainBlockHeight` field."""
+  paraChainBlockHeight: IntFilter
+
+  """Filter by the object’s `poolId` field."""
+  poolId: StringFilter
 
   """Checks for all expressions in this list."""
-  and: [MigrationFilter!]
+  and: [LbpPoolAssetsDatumFilter!]
 
   """Checks for any expressions in this list."""
-  or: [MigrationFilter!]
+  or: [LbpPoolAssetsDatumFilter!]
 
   """Negates the expression."""
-  not: MigrationFilter
-}
-
-"""
-A filter to be used against Int fields. All fields are combined with a logical ‘and.’
-"""
-input IntFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Int
-
-  """Not equal to the specified value."""
-  notEqualTo: Int
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Int
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Int
-
-  """Included in the specified list."""
-  in: [Int!]
-
-  """Not included in the specified list."""
-  notIn: [Int!]
-
-  """Less than the specified value."""
-  lessThan: Int
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Int
-
-  """Greater than the specified value."""
-  greaterThan: Int
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Int
-}
-
-"""
-A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’
-"""
-input BigIntFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: BigInt
-
-  """Not equal to the specified value."""
-  notEqualTo: BigInt
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: BigInt
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: BigInt
-
-  """Included in the specified list."""
-  in: [BigInt!]
-
-  """Not included in the specified list."""
-  notIn: [BigInt!]
-
-  """Less than the specified value."""
-  lessThan: BigInt
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: BigInt
-
-  """Greater than the specified value."""
-  greaterThan: BigInt
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: BigInt
+  not: LbpPoolAssetsDatumFilter
 }
 
 """
@@ -809,6 +916,1254 @@ input StringFilter {
   greaterThanOrEqualToInsensitive: String
 }
 
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against JSON fields. All fields are combined with a logical ‘and.’
+"""
+input JSONFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: JSON
+
+  """Not equal to the specified value."""
+  notEqualTo: JSON
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: JSON
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: JSON
+
+  """Included in the specified list."""
+  in: [JSON!]
+
+  """Not included in the specified list."""
+  notIn: [JSON!]
+
+  """Less than the specified value."""
+  lessThan: JSON
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: JSON
+
+  """Greater than the specified value."""
+  greaterThan: JSON
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: JSON
+
+  """Contains the specified JSON."""
+  contains: JSON
+
+  """Contains the specified key."""
+  containsKey: String
+
+  """Contains all of the specified keys."""
+  containsAllKeys: [String!]
+
+  """Contains any of the specified keys."""
+  containsAnyKeys: [String!]
+
+  """Contained by the specified JSON."""
+  containedBy: JSON
+}
+
+"""A `LbpPool` edge in the connection."""
+type LbpPoolsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `LbpPool` at the end of the edge."""
+  node: LbpPool
+}
+
+type LbpPoolAggregates {
+  keys: [String!]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: LbpPoolSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: LbpPoolDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: LbpPoolMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: LbpPoolMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: LbpPoolAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: LbpPoolStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: LbpPoolStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: LbpPoolVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: LbpPoolVariancePopulationAggregates
+}
+
+type LbpPoolSumAggregates {
+  """Sum of assetAId across the matching connection"""
+  assetAId: BigInt!
+
+  """Sum of assetBId across the matching connection"""
+  assetBId: BigInt!
+
+  """Sum of start across the matching connection"""
+  start: BigInt!
+
+  """Sum of end across the matching connection"""
+  end: BigInt!
+
+  """Sum of initialWeight across the matching connection"""
+  initialWeight: BigInt!
+
+  """Sum of finalWeight across the matching connection"""
+  finalWeight: BigInt!
+
+  """Sum of repayTarget across the matching connection"""
+  repayTarget: BigFloat!
+
+  """Sum of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: BigInt!
+}
+
+type LbpPoolDistinctCountAggregates {
+  """Distinct count of id across the matching connection"""
+  id: BigInt
+
+  """Distinct count of poolAddress across the matching connection"""
+  poolAddress: BigInt
+
+  """Distinct count of assetAId across the matching connection"""
+  assetAId: BigInt
+
+  """Distinct count of assetBId across the matching connection"""
+  assetBId: BigInt
+
+  """Distinct count of owner across the matching connection"""
+  owner: BigInt
+
+  """Distinct count of start across the matching connection"""
+  start: BigInt
+
+  """Distinct count of end across the matching connection"""
+  end: BigInt
+
+  """Distinct count of initialWeight across the matching connection"""
+  initialWeight: BigInt
+
+  """Distinct count of finalWeight across the matching connection"""
+  finalWeight: BigInt
+
+  """Distinct count of weightCurve across the matching connection"""
+  weightCurve: BigInt
+
+  """Distinct count of fee across the matching connection"""
+  fee: BigInt
+
+  """Distinct count of feeCollector across the matching connection"""
+  feeCollector: BigInt
+
+  """Distinct count of repayTarget across the matching connection"""
+  repayTarget: BigInt
+
+  """Distinct count of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: BigInt
+}
+
+type LbpPoolMinAggregates {
+  """Minimum of assetAId across the matching connection"""
+  assetAId: Int
+
+  """Minimum of assetBId across the matching connection"""
+  assetBId: Int
+
+  """Minimum of start across the matching connection"""
+  start: Int
+
+  """Minimum of end across the matching connection"""
+  end: Int
+
+  """Minimum of initialWeight across the matching connection"""
+  initialWeight: Int
+
+  """Minimum of finalWeight across the matching connection"""
+  finalWeight: Int
+
+  """Minimum of repayTarget across the matching connection"""
+  repayTarget: BigFloat
+
+  """Minimum of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: Int
+}
+
+type LbpPoolMaxAggregates {
+  """Maximum of assetAId across the matching connection"""
+  assetAId: Int
+
+  """Maximum of assetBId across the matching connection"""
+  assetBId: Int
+
+  """Maximum of start across the matching connection"""
+  start: Int
+
+  """Maximum of end across the matching connection"""
+  end: Int
+
+  """Maximum of initialWeight across the matching connection"""
+  initialWeight: Int
+
+  """Maximum of finalWeight across the matching connection"""
+  finalWeight: Int
+
+  """Maximum of repayTarget across the matching connection"""
+  repayTarget: BigFloat
+
+  """Maximum of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: Int
+}
+
+type LbpPoolAverageAggregates {
+  """Mean average of assetAId across the matching connection"""
+  assetAId: BigFloat
+
+  """Mean average of assetBId across the matching connection"""
+  assetBId: BigFloat
+
+  """Mean average of start across the matching connection"""
+  start: BigFloat
+
+  """Mean average of end across the matching connection"""
+  end: BigFloat
+
+  """Mean average of initialWeight across the matching connection"""
+  initialWeight: BigFloat
+
+  """Mean average of finalWeight across the matching connection"""
+  finalWeight: BigFloat
+
+  """Mean average of repayTarget across the matching connection"""
+  repayTarget: BigFloat
+
+  """Mean average of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: BigFloat
+}
+
+type LbpPoolStddevSampleAggregates {
+  """Sample standard deviation of assetAId across the matching connection"""
+  assetAId: BigFloat
+
+  """Sample standard deviation of assetBId across the matching connection"""
+  assetBId: BigFloat
+
+  """Sample standard deviation of start across the matching connection"""
+  start: BigFloat
+
+  """Sample standard deviation of end across the matching connection"""
+  end: BigFloat
+
+  """
+  Sample standard deviation of initialWeight across the matching connection
+  """
+  initialWeight: BigFloat
+
+  """
+  Sample standard deviation of finalWeight across the matching connection
+  """
+  finalWeight: BigFloat
+
+  """
+  Sample standard deviation of repayTarget across the matching connection
+  """
+  repayTarget: BigFloat
+
+  """
+  Sample standard deviation of paraChainBlockHeight across the matching connection
+  """
+  paraChainBlockHeight: BigFloat
+}
+
+type LbpPoolStddevPopulationAggregates {
+  """
+  Population standard deviation of assetAId across the matching connection
+  """
+  assetAId: BigFloat
+
+  """
+  Population standard deviation of assetBId across the matching connection
+  """
+  assetBId: BigFloat
+
+  """Population standard deviation of start across the matching connection"""
+  start: BigFloat
+
+  """Population standard deviation of end across the matching connection"""
+  end: BigFloat
+
+  """
+  Population standard deviation of initialWeight across the matching connection
+  """
+  initialWeight: BigFloat
+
+  """
+  Population standard deviation of finalWeight across the matching connection
+  """
+  finalWeight: BigFloat
+
+  """
+  Population standard deviation of repayTarget across the matching connection
+  """
+  repayTarget: BigFloat
+
+  """
+  Population standard deviation of paraChainBlockHeight across the matching connection
+  """
+  paraChainBlockHeight: BigFloat
+}
+
+type LbpPoolVarianceSampleAggregates {
+  """Sample variance of assetAId across the matching connection"""
+  assetAId: BigFloat
+
+  """Sample variance of assetBId across the matching connection"""
+  assetBId: BigFloat
+
+  """Sample variance of start across the matching connection"""
+  start: BigFloat
+
+  """Sample variance of end across the matching connection"""
+  end: BigFloat
+
+  """Sample variance of initialWeight across the matching connection"""
+  initialWeight: BigFloat
+
+  """Sample variance of finalWeight across the matching connection"""
+  finalWeight: BigFloat
+
+  """Sample variance of repayTarget across the matching connection"""
+  repayTarget: BigFloat
+
+  """Sample variance of paraChainBlockHeight across the matching connection"""
+  paraChainBlockHeight: BigFloat
+}
+
+type LbpPoolVariancePopulationAggregates {
+  """Population variance of assetAId across the matching connection"""
+  assetAId: BigFloat
+
+  """Population variance of assetBId across the matching connection"""
+  assetBId: BigFloat
+
+  """Population variance of start across the matching connection"""
+  start: BigFloat
+
+  """Population variance of end across the matching connection"""
+  end: BigFloat
+
+  """Population variance of initialWeight across the matching connection"""
+  initialWeight: BigFloat
+
+  """Population variance of finalWeight across the matching connection"""
+  finalWeight: BigFloat
+
+  """Population variance of repayTarget across the matching connection"""
+  repayTarget: BigFloat
+
+  """
+  Population variance of paraChainBlockHeight across the matching connection
+  """
+  paraChainBlockHeight: BigFloat
+}
+
+"""Grouping methods for `LbpPool` for usage during aggregation."""
+enum LbpPoolGroupBy {
+  POOL_ADDRESS
+  ASSET_A_ID
+  ASSET_B_ID
+  OWNER
+  START
+  END
+  INITIAL_WEIGHT
+  FINAL_WEIGHT
+  WEIGHT_CURVE
+  FEE
+  FEE_COLLECTOR
+  REPAY_TARGET
+  PARA_CHAIN_BLOCK_HEIGHT
+}
+
+"""Conditions for `LbpPool` aggregates."""
+input LbpPoolHavingInput {
+  AND: [LbpPoolHavingInput!]
+  OR: [LbpPoolHavingInput!]
+  sum: LbpPoolHavingSumInput
+  distinctCount: LbpPoolHavingDistinctCountInput
+  min: LbpPoolHavingMinInput
+  max: LbpPoolHavingMaxInput
+  average: LbpPoolHavingAverageInput
+  stddevSample: LbpPoolHavingStddevSampleInput
+  stddevPopulation: LbpPoolHavingStddevPopulationInput
+  varianceSample: LbpPoolHavingVarianceSampleInput
+  variancePopulation: LbpPoolHavingVariancePopulationInput
+}
+
+input LbpPoolHavingSumInput {
+  assetAId: HavingIntFilter
+  assetBId: HavingIntFilter
+  start: HavingIntFilter
+  end: HavingIntFilter
+  initialWeight: HavingIntFilter
+  finalWeight: HavingIntFilter
+  repayTarget: HavingBigfloatFilter
+  paraChainBlockHeight: HavingIntFilter
+}
+
+input HavingBigfloatFilter {
+  equalTo: BigFloat
+  notEqualTo: BigFloat
+  greaterThan: BigFloat
+  greaterThanOrEqualTo: BigFloat
+  lessThan: BigFloat
+  lessThanOrEqualTo: BigFloat
+}
+
+input LbpPoolHavingDistinctCountInput {
+  assetAId: HavingIntFilter
+  assetBId: HavingIntFilter
+  start: HavingIntFilter
+  end: HavingIntFilter
+  initialWeight: HavingIntFilter
+  finalWeight: HavingIntFilter
+  repayTarget: HavingBigfloatFilter
+  paraChainBlockHeight: HavingIntFilter
+}
+
+input LbpPoolHavingMinInput {
+  assetAId: HavingIntFilter
+  assetBId: HavingIntFilter
+  start: HavingIntFilter
+  end: HavingIntFilter
+  initialWeight: HavingIntFilter
+  finalWeight: HavingIntFilter
+  repayTarget: HavingBigfloatFilter
+  paraChainBlockHeight: HavingIntFilter
+}
+
+input LbpPoolHavingMaxInput {
+  assetAId: HavingIntFilter
+  assetBId: HavingIntFilter
+  start: HavingIntFilter
+  end: HavingIntFilter
+  initialWeight: HavingIntFilter
+  finalWeight: HavingIntFilter
+  repayTarget: HavingBigfloatFilter
+  paraChainBlockHeight: HavingIntFilter
+}
+
+input LbpPoolHavingAverageInput {
+  assetAId: HavingIntFilter
+  assetBId: HavingIntFilter
+  start: HavingIntFilter
+  end: HavingIntFilter
+  initialWeight: HavingIntFilter
+  finalWeight: HavingIntFilter
+  repayTarget: HavingBigfloatFilter
+  paraChainBlockHeight: HavingIntFilter
+}
+
+input LbpPoolHavingStddevSampleInput {
+  assetAId: HavingIntFilter
+  assetBId: HavingIntFilter
+  start: HavingIntFilter
+  end: HavingIntFilter
+  initialWeight: HavingIntFilter
+  finalWeight: HavingIntFilter
+  repayTarget: HavingBigfloatFilter
+  paraChainBlockHeight: HavingIntFilter
+}
+
+input LbpPoolHavingStddevPopulationInput {
+  assetAId: HavingIntFilter
+  assetBId: HavingIntFilter
+  start: HavingIntFilter
+  end: HavingIntFilter
+  initialWeight: HavingIntFilter
+  finalWeight: HavingIntFilter
+  repayTarget: HavingBigfloatFilter
+  paraChainBlockHeight: HavingIntFilter
+}
+
+input LbpPoolHavingVarianceSampleInput {
+  assetAId: HavingIntFilter
+  assetBId: HavingIntFilter
+  start: HavingIntFilter
+  end: HavingIntFilter
+  initialWeight: HavingIntFilter
+  finalWeight: HavingIntFilter
+  repayTarget: HavingBigfloatFilter
+  paraChainBlockHeight: HavingIntFilter
+}
+
+input LbpPoolHavingVariancePopulationInput {
+  assetAId: HavingIntFilter
+  assetBId: HavingIntFilter
+  start: HavingIntFilter
+  end: HavingIntFilter
+  initialWeight: HavingIntFilter
+  finalWeight: HavingIntFilter
+  repayTarget: HavingBigfloatFilter
+  paraChainBlockHeight: HavingIntFilter
+}
+
+"""Methods to use when ordering `LbpPool`."""
+enum LbpPoolsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  POOL_ADDRESS_ASC
+  POOL_ADDRESS_DESC
+  ASSET_A_ID_ASC
+  ASSET_A_ID_DESC
+  ASSET_B_ID_ASC
+  ASSET_B_ID_DESC
+  OWNER_ASC
+  OWNER_DESC
+  START_ASC
+  START_DESC
+  END_ASC
+  END_DESC
+  INITIAL_WEIGHT_ASC
+  INITIAL_WEIGHT_DESC
+  FINAL_WEIGHT_ASC
+  FINAL_WEIGHT_DESC
+  WEIGHT_CURVE_ASC
+  WEIGHT_CURVE_DESC
+  FEE_ASC
+  FEE_DESC
+  FEE_COLLECTOR_ASC
+  FEE_COLLECTOR_DESC
+  REPAY_TARGET_ASC
+  REPAY_TARGET_DESC
+  PARA_CHAIN_BLOCK_HEIGHT_ASC
+  PARA_CHAIN_BLOCK_HEIGHT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_COUNT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_COUNT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_ASSET_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_ASSET_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_BALANCES_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_BALANCES_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_PARA_CHAIN_BLOCK_HEIGHT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_PARA_CHAIN_BLOCK_HEIGHT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_POOL_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_SUM_POOL_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_ASSET_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_ASSET_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_BALANCES_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_BALANCES_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_PARA_CHAIN_BLOCK_HEIGHT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_PARA_CHAIN_BLOCK_HEIGHT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_POOL_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_DISTINCT_COUNT_POOL_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_ASSET_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_ASSET_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_BALANCES_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_BALANCES_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_PARA_CHAIN_BLOCK_HEIGHT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_PARA_CHAIN_BLOCK_HEIGHT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_POOL_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MIN_POOL_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_ASSET_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_ASSET_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_BALANCES_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_BALANCES_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_PARA_CHAIN_BLOCK_HEIGHT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_PARA_CHAIN_BLOCK_HEIGHT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_POOL_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_MAX_POOL_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_ASSET_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_ASSET_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_BALANCES_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_BALANCES_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_PARA_CHAIN_BLOCK_HEIGHT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_PARA_CHAIN_BLOCK_HEIGHT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_POOL_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_AVERAGE_POOL_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_ASSET_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_ASSET_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_BALANCES_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_BALANCES_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_PARA_CHAIN_BLOCK_HEIGHT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_PARA_CHAIN_BLOCK_HEIGHT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_POOL_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_SAMPLE_POOL_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_ASSET_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_ASSET_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_BALANCES_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_BALANCES_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_PARA_CHAIN_BLOCK_HEIGHT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_PARA_CHAIN_BLOCK_HEIGHT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_POOL_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_STDDEV_POPULATION_POOL_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_ASSET_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_ASSET_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_BALANCES_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_BALANCES_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_PARA_CHAIN_BLOCK_HEIGHT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_PARA_CHAIN_BLOCK_HEIGHT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_POOL_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_SAMPLE_POOL_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_ASSET_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_ASSET_ID_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_BALANCES_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_BALANCES_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_PARA_CHAIN_BLOCK_HEIGHT_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_PARA_CHAIN_BLOCK_HEIGHT_DESC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_POOL_ID_ASC
+  LBP_POOL_ASSETS_DATA_BY_POOL_ID_VARIANCE_POPULATION_POOL_ID_DESC
+}
+
+"""
+A condition to be used against `LbpPool` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input LbpPoolCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: String
+
+  """Checks for equality with the object’s `poolAddress` field."""
+  poolAddress: String
+
+  """Checks for equality with the object’s `assetAId` field."""
+  assetAId: Int
+
+  """Checks for equality with the object’s `assetBId` field."""
+  assetBId: Int
+
+  """Checks for equality with the object’s `owner` field."""
+  owner: String
+
+  """Checks for equality with the object’s `start` field."""
+  start: Int
+
+  """Checks for equality with the object’s `end` field."""
+  end: Int
+
+  """Checks for equality with the object’s `initialWeight` field."""
+  initialWeight: Int
+
+  """Checks for equality with the object’s `finalWeight` field."""
+  finalWeight: Int
+
+  """Checks for equality with the object’s `weightCurve` field."""
+  weightCurve: String
+
+  """Checks for equality with the object’s `fee` field."""
+  fee: [Int]
+
+  """Checks for equality with the object’s `feeCollector` field."""
+  feeCollector: String
+
+  """Checks for equality with the object’s `repayTarget` field."""
+  repayTarget: BigFloat
+
+  """Checks for equality with the object’s `paraChainBlockHeight` field."""
+  paraChainBlockHeight: Int
+}
+
+"""
+A filter to be used against `LbpPool` object types. All fields are combined with a logical ‘and.’
+"""
+input LbpPoolFilter {
+  """Filter by the object’s `id` field."""
+  id: StringFilter
+
+  """Filter by the object’s `poolAddress` field."""
+  poolAddress: StringFilter
+
+  """Filter by the object’s `assetAId` field."""
+  assetAId: IntFilter
+
+  """Filter by the object’s `assetBId` field."""
+  assetBId: IntFilter
+
+  """Filter by the object’s `owner` field."""
+  owner: StringFilter
+
+  """Filter by the object’s `start` field."""
+  start: IntFilter
+
+  """Filter by the object’s `end` field."""
+  end: IntFilter
+
+  """Filter by the object’s `initialWeight` field."""
+  initialWeight: IntFilter
+
+  """Filter by the object’s `finalWeight` field."""
+  finalWeight: IntFilter
+
+  """Filter by the object’s `weightCurve` field."""
+  weightCurve: StringFilter
+
+  """Filter by the object’s `fee` field."""
+  fee: IntListFilter
+
+  """Filter by the object’s `feeCollector` field."""
+  feeCollector: StringFilter
+
+  """Filter by the object’s `repayTarget` field."""
+  repayTarget: BigFloatFilter
+
+  """Filter by the object’s `paraChainBlockHeight` field."""
+  paraChainBlockHeight: IntFilter
+
+  """Checks for all expressions in this list."""
+  and: [LbpPoolFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [LbpPoolFilter!]
+
+  """Negates the expression."""
+  not: LbpPoolFilter
+}
+
+"""
+A filter to be used against Int List fields. All fields are combined with a logical ‘and.’
+"""
+input IntListFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: [Int]
+
+  """Not equal to the specified value."""
+  notEqualTo: [Int]
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: [Int]
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: [Int]
+
+  """Less than the specified value."""
+  lessThan: [Int]
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: [Int]
+
+  """Greater than the specified value."""
+  greaterThan: [Int]
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: [Int]
+
+  """Contains the specified list of values."""
+  contains: [Int]
+
+  """Contained by the specified list of values."""
+  containedBy: [Int]
+
+  """Overlaps the specified list of values."""
+  overlaps: [Int]
+
+  """Any array item is equal to the specified value."""
+  anyEqualTo: Int
+
+  """Any array item is not equal to the specified value."""
+  anyNotEqualTo: Int
+
+  """Any array item is less than the specified value."""
+  anyLessThan: Int
+
+  """Any array item is less than or equal to the specified value."""
+  anyLessThanOrEqualTo: Int
+
+  """Any array item is greater than the specified value."""
+  anyGreaterThan: Int
+
+  """Any array item is greater than or equal to the specified value."""
+  anyGreaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’
+"""
+input BigFloatFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigFloat
+
+  """Not equal to the specified value."""
+  notEqualTo: BigFloat
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigFloat
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigFloat
+
+  """Included in the specified list."""
+  in: [BigFloat!]
+
+  """Not included in the specified list."""
+  notIn: [BigFloat!]
+
+  """Less than the specified value."""
+  lessThan: BigFloat
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigFloat
+
+  """Greater than the specified value."""
+  greaterThan: BigFloat
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigFloat
+}
+
+"""A connection to a list of `Migration` values."""
+type MigrationsConnection {
+  """A list of `Migration` objects."""
+  nodes: [Migration]!
+
+  """
+  A list of edges which contains the `Migration` and cursor to aid in pagination.
+  """
+  edges: [MigrationsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Migration` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: MigrationAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `Migration` for these aggregates."""
+    groupBy: [MigrationsGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: MigrationsHavingInput
+  ): [MigrationAggregates!]
+}
+
+type Migration {
+  id: Int!
+  timestamp: BigInt!
+  name: String!
+}
+
+"""A `Migration` edge in the connection."""
+type MigrationsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Migration` at the end of the edge."""
+  node: Migration
+}
+
+type MigrationAggregates {
+  keys: [String!]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: MigrationSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: MigrationDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: MigrationMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: MigrationMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: MigrationAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: MigrationStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: MigrationStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: MigrationVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: MigrationVariancePopulationAggregates
+}
+
+type MigrationSumAggregates {
+  """Sum of id across the matching connection"""
+  id: BigInt!
+
+  """Sum of timestamp across the matching connection"""
+  timestamp: BigFloat!
+}
+
+type MigrationDistinctCountAggregates {
+  """Distinct count of id across the matching connection"""
+  id: BigInt
+
+  """Distinct count of timestamp across the matching connection"""
+  timestamp: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+}
+
+type MigrationMinAggregates {
+  """Minimum of id across the matching connection"""
+  id: Int
+
+  """Minimum of timestamp across the matching connection"""
+  timestamp: BigInt
+}
+
+type MigrationMaxAggregates {
+  """Maximum of id across the matching connection"""
+  id: Int
+
+  """Maximum of timestamp across the matching connection"""
+  timestamp: BigInt
+}
+
+type MigrationAverageAggregates {
+  """Mean average of id across the matching connection"""
+  id: BigFloat
+
+  """Mean average of timestamp across the matching connection"""
+  timestamp: BigFloat
+}
+
+type MigrationStddevSampleAggregates {
+  """Sample standard deviation of id across the matching connection"""
+  id: BigFloat
+
+  """Sample standard deviation of timestamp across the matching connection"""
+  timestamp: BigFloat
+}
+
+type MigrationStddevPopulationAggregates {
+  """Population standard deviation of id across the matching connection"""
+  id: BigFloat
+
+  """
+  Population standard deviation of timestamp across the matching connection
+  """
+  timestamp: BigFloat
+}
+
+type MigrationVarianceSampleAggregates {
+  """Sample variance of id across the matching connection"""
+  id: BigFloat
+
+  """Sample variance of timestamp across the matching connection"""
+  timestamp: BigFloat
+}
+
+type MigrationVariancePopulationAggregates {
+  """Population variance of id across the matching connection"""
+  id: BigFloat
+
+  """Population variance of timestamp across the matching connection"""
+  timestamp: BigFloat
+}
+
+"""Grouping methods for `Migration` for usage during aggregation."""
+enum MigrationsGroupBy {
+  TIMESTAMP
+  NAME
+}
+
+"""Conditions for `Migration` aggregates."""
+input MigrationsHavingInput {
+  AND: [MigrationsHavingInput!]
+  OR: [MigrationsHavingInput!]
+  sum: MigrationsHavingSumInput
+  distinctCount: MigrationsHavingDistinctCountInput
+  min: MigrationsHavingMinInput
+  max: MigrationsHavingMaxInput
+  average: MigrationsHavingAverageInput
+  stddevSample: MigrationsHavingStddevSampleInput
+  stddevPopulation: MigrationsHavingStddevPopulationInput
+  varianceSample: MigrationsHavingVarianceSampleInput
+  variancePopulation: MigrationsHavingVariancePopulationInput
+}
+
+input MigrationsHavingSumInput {
+  id: HavingIntFilter
+  timestamp: HavingBigintFilter
+}
+
+input HavingBigintFilter {
+  equalTo: BigInt
+  notEqualTo: BigInt
+  greaterThan: BigInt
+  greaterThanOrEqualTo: BigInt
+  lessThan: BigInt
+  lessThanOrEqualTo: BigInt
+}
+
+input MigrationsHavingDistinctCountInput {
+  id: HavingIntFilter
+  timestamp: HavingBigintFilter
+}
+
+input MigrationsHavingMinInput {
+  id: HavingIntFilter
+  timestamp: HavingBigintFilter
+}
+
+input MigrationsHavingMaxInput {
+  id: HavingIntFilter
+  timestamp: HavingBigintFilter
+}
+
+input MigrationsHavingAverageInput {
+  id: HavingIntFilter
+  timestamp: HavingBigintFilter
+}
+
+input MigrationsHavingStddevSampleInput {
+  id: HavingIntFilter
+  timestamp: HavingBigintFilter
+}
+
+input MigrationsHavingStddevPopulationInput {
+  id: HavingIntFilter
+  timestamp: HavingBigintFilter
+}
+
+input MigrationsHavingVarianceSampleInput {
+  id: HavingIntFilter
+  timestamp: HavingBigintFilter
+}
+
+input MigrationsHavingVariancePopulationInput {
+  id: HavingIntFilter
+  timestamp: HavingBigintFilter
+}
+
+"""Methods to use when ordering `Migration`."""
+enum MigrationsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  TIMESTAMP_ASC
+  TIMESTAMP_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Migration` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input MigrationCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `timestamp` field."""
+  timestamp: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""
+A filter to be used against `Migration` object types. All fields are combined with a logical ‘and.’
+"""
+input MigrationFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `timestamp` field."""
+  timestamp: BigIntFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [MigrationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MigrationFilter!]
+
+  """Negates the expression."""
+  not: MigrationFilter
+}
+
+"""
+A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’
+"""
+input BigIntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigInt
+
+  """Not equal to the specified value."""
+  notEqualTo: BigInt
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigInt
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigInt
+
+  """Included in the specified list."""
+  in: [BigInt!]
+
+  """Not included in the specified list."""
+  notIn: [BigInt!]
+
+  """Less than the specified value."""
+  lessThan: BigInt
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigInt
+
+  """Greater than the specified value."""
+  greaterThan: BigInt
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigInt
+}
+
 """A connection to a list of `OmnipoolAssetDatum` values."""
 type OmnipoolAssetDataConnection {
   """A list of `OmnipoolAssetDatum` objects."""
@@ -854,11 +2209,6 @@ type OmnipoolAssetDatum {
   assetState: JSON!
   paraChainBlockHeight: Int!
 }
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
 
 """A `OmnipoolAssetDatum` edge in the connection."""
 type OmnipoolAssetDataEdge {
@@ -1154,63 +2504,6 @@ input OmnipoolAssetDatumFilter {
 
   """Negates the expression."""
   not: OmnipoolAssetDatumFilter
-}
-
-"""
-A filter to be used against JSON fields. All fields are combined with a logical ‘and.’
-"""
-input JSONFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: JSON
-
-  """Not equal to the specified value."""
-  notEqualTo: JSON
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: JSON
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: JSON
-
-  """Included in the specified list."""
-  in: [JSON!]
-
-  """Not included in the specified list."""
-  notIn: [JSON!]
-
-  """Less than the specified value."""
-  lessThan: JSON
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: JSON
-
-  """Greater than the specified value."""
-  greaterThan: JSON
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: JSON
-
-  """Contains the specified JSON."""
-  contains: JSON
-
-  """Contains the specified key."""
-  containsKey: String
-
-  """Contains all of the specified keys."""
-  containsAllKeys: [String!]
-
-  """Contains any of the specified keys."""
-  containsAnyKeys: [String!]
-
-  """Contained by the specified JSON."""
-  containedBy: JSON
 }
 
 """A connection to a list of `Stablepool` values."""
