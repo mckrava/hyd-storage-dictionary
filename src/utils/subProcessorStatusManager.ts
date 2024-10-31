@@ -12,7 +12,7 @@ export class SubProcessorStatusManager {
     return this.subBatchConf;
   }
 
-  async getStatus() {
+  async getStatus(ensure = false) {
     if (this.currentStatusEntity) return this.currentStatusEntity;
 
     let statusEntity = await this.ctx.store.findOne(SubProcessorStatus, {
@@ -31,7 +31,7 @@ export class SubProcessorStatusManager {
       height: this.ctx.blocks[0]?.header.height ?? this.ctx.appConfig.END_BLOCK,
     });
 
-    await this.ctx.store.save(statusEntity);
+    if (ensure) await this.ctx.store.save(statusEntity);
     this.currentStatusEntity = statusEntity;
     return statusEntity;
   }
@@ -43,7 +43,7 @@ export class SubProcessorStatusManager {
   }
 
   async calcSubBatchConfig() {
-    await this.getStatus(); // Just to init status entity for current sub-processor
+    await this.getStatus(true); // Just to init status entity for current sub-processor
 
     const allSubProcessorsStats = await this.ctx.store.find(SubProcessorStatus);
 

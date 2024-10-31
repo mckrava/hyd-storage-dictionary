@@ -9,6 +9,7 @@ import { AppConfig } from './appConfig';
 import PgPubsub from '@graphile/pg-pubsub';
 import TypeOverrides from 'pg/lib/type-overrides';
 import { getEnvPath } from './utils/helpers';
+import { ApiTypesAugmentPlugin } from './apiSupport/plugins/query/apiTypesAugment.plugin';
 
 const pgTypes = new TypeOverrides();
 pgTypes.setTypeParser(1700, function (val) {
@@ -43,6 +44,7 @@ const postgraphileInstance = postgraphile(
       FilterPlugin,
       SimplifyInflectorPlugin,
       ProcessorStatusPlugin,
+      ApiTypesAugmentPlugin,
     ],
     disableQueryLog: appConfig.NODE_ENV !== 'development',
     externalUrlBase: process.env.BASE_PATH

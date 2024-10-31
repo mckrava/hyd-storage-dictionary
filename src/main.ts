@@ -16,6 +16,7 @@ processor.run(
   new TypeormDatabase({
     supportHotBlocks: true,
     stateSchema: appConfig.STATE_SCHEMA_NAME,
+    isolationLevel: 'READ COMMITTED',
   }),
   async (ctx) => {
     const ctxWithBatchState: Omit<
@@ -39,6 +40,7 @@ processor.run(
     for (const blocksSubBatch of splitIntoBatches(
       ctx.blocks,
       subProcessorStatusManager.subBatchConfig.subBatchSize
+      // 334
     )) {
       console.time(
         `Blocks sub-batch #${blocksSubBatchIndex} with size ${subProcessorStatusManager.subBatchConfig.subBatchSize} blocks has been processed in`
@@ -72,31 +74,43 @@ processor.run(
       await new Promise((res) => setTimeout(res, exactTimeout));
       console.log(`Sub-batch timeout: ${exactTimeout}ms.`);
       blocksSubBatchIndex++;
+
+      if (appConfig.PROCESS_XYK_POOLS) {
+        await ctxWithBatchState.store.save([
+          ...batchState.state.xykPools.values(),
+        ]);
+        await ctxWithBatchState.store.save([
+          ...batchState.state.xykPoolAssetsData.values(),
+        ]);
+        batchState.state = {
+          xykPools: new Map(),
+          xykPoolAssetsData: new Map(),
+        };
+      }
+
+      if (appConfig.PROCESS_OMNIPOOLS) {
+        await ctxWithBatchState.store.save([
+          ...batchState.state.omnipoolAssetsData.values(),
+        ]);
+        batchState.state = {
+          omnipoolAssetsData: new Map(),
+        };
+      }
+      if (appConfig.PROCESS_STABLEPOOLS) {
+        await ctxWithBatchState.store.save([
+          ...batchState.state.stablepools.values(),
+        ]);
+        await ctxWithBatchState.store.save([
+          ...batchState.state.stablepoolAssetsData.values(),
+        ]);
+        batchState.state = {
+          stablepools: new Map(),
+          stablepoolAssetsData: new Map(),
+        };
+      }
     }
     console.timeEnd(`Blocks batch has been processed in`);
 
-    if (appConfig.PROCESS_XYK_POOLS) {
-      await ctxWithBatchState.store.save([
-        ...batchState.state.xykPools.values(),
-      ]);
-      await ctxWithBatchState.store.save([
-        ...batchState.state.xykPoolAssetsData.values(),
-      ]);
-    }
-
-    if (appConfig.PROCESS_OMNIPOOLS) {
-      await ctxWithBatchState.store.save([
-        ...batchState.state.omnipoolAssetsData.values(),
-      ]);
-    }
-    if (appConfig.PROCESS_STABLEPOOLS) {
-      await ctxWithBatchState.store.save([
-        ...batchState.state.stablepools.values(),
-      ]);
-      await ctxWithBatchState.store.save([
-        ...batchState.state.stablepoolAssetsData.values(),
-      ]);
-    }
     await subProcessorStatusManager.setSubProcessorStatus(
       ctx.blocks[ctx.blocks.length - 1].header.height
     );

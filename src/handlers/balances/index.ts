@@ -74,7 +74,9 @@ export async function getAssetBalancesMany(
         });
       }
     });
-  } else {
+  }
+
+  if (assetsKeyPairs.length > 0) {
     const unmarkedData =
       await parsers.storage.tokens.getTokensAccountsAssetBalancesMany(
         assetsKeyPairs.map((kPair) => [kPair.address, kPair.assetId]),

@@ -251,6 +251,7 @@ type Query {
   xykPool(id: String!): XykPool
   xykPoolAssetsDatum(id: String!): XykPoolAssetsDatum
   _squidStatus: [_ProcessorStatus!]!
+  _apiSupport: ApiSupportResponse
 }
 
 """A connection to a list of `Migration` values."""
@@ -3394,6 +3395,33 @@ type _ProcessorStatus {
   hash: String!
   batchBlockFrom: Int!
   batchBlockTo: Int!
+}
+
+type ApiSupportResponse {
+  accountBalances: AccountBalances
+  tradability: Tradability
+  omnipoolAssetState: OmnipoolAssetState
+}
+
+type AccountBalances {
+  free: BigInt!
+  reserved: BigInt!
+  miscFrozen: BigInt
+  feeFrozen: BigInt
+  frozen: BigInt
+  flags: BigInt
+}
+
+type Tradability {
+  bits: Int!
+}
+
+type OmnipoolAssetState {
+  hubReserve: BigInt!
+  shares: BigInt!
+  protocolShares: BigInt!
+  cap: BigInt!
+  tradable: Tradability
 }
 
 """
