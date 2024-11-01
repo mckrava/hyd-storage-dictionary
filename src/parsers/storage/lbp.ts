@@ -6,7 +6,7 @@ import { UnknownVersionError } from '../../utils/errors';
 async function getAllPoolData(block: BlockHeader): Promise<LbpPoolData[]> {
   let pairsPaged: LbpPoolData[] = [];
 
-  if (block.specVersion < 183) return [];
+  if (block.specVersion < 176) return [];
 
   if (storage.lbp.poolData.v176.is(block)) {
     for await (let page of storage.lbp.poolData.v176.getPairsPaged(100, block))

@@ -4,7 +4,7 @@
 
 manifestVersion: subsquid.io/v0.1
 name: hydration-storage-dictionary
-slot: 505
+slot: 506
 description: Hydration storage dictionary for LBP pool storage
 build:
 deploy:

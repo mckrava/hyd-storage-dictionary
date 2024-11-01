@@ -1,24 +1,17 @@
 import { Block, ProcessorContext } from '../../processor';
 import { Store } from '@subsquid/typeorm-store';
 import parsers from '../../parsers';
-import {
-  AccountBalances,
-  LbpPool,
-  LbpPoolAssetsData,
-  XykPool,
-  XykPoolAssetsData,
-} from '../../model';
+import { AccountBalances, LbpPool, LbpPoolAssetsData } from '../../model';
 import { getAssetBalancesMany } from '../balances';
 
 export async function handleLbpPoolsStorage(
   ctx: ProcessorContext<Store>,
   currentBlockHeader: Block
 ): Promise<void> {
-  const lbpPools = ctx.batchState.state.lbpPools;
-  const lbpPoolAssetsData = ctx.batchState.state.lbpPoolAssetsData;
+  const lbpPools: Map<string, LbpPool> = new Map();
+  const lbpPoolAssetsData: Map<string, LbpPoolAssetsData> = new Map();
 
   const allPools = await parsers.storage.lbp.getAllPoolData(currentBlockHeader);
-
   const fallbackAccountBalances = new AccountBalances({
     free: BigInt(0),
     reserved: BigInt(0),
@@ -90,16 +83,6 @@ export async function handleLbpPoolsStorage(
     lbpPoolAssetsData.set(assetAData.id, assetAData);
     lbpPoolAssetsData.set(assetBData.id, assetBData);
   }
-
   await ctx.store.save([...lbpPools.values()]);
   await ctx.store.save([...lbpPoolAssetsData.values()]);
-  // batchState.state = {
-  //   lbpPools: new Map(),
-  //   lbpPoolAssetsData: new Map(),
-  // };
-
-  // ctx.batchState.state = {
-  //   lbpPools,
-  //   lbpPoolAssetsData,
-  // };
 }

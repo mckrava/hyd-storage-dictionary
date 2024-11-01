@@ -16,7 +16,7 @@ export async function handleOmnipoolStorage(
   ctx: ProcessorContext<Store>,
   currentBlockHeader: Block
 ): Promise<void> {
-  const omnipoolAssetsData = ctx.batchState.state.omnipoolAssetsData;
+  const omnipoolAssetsData: Map<string, OmnipoolAssetData> = new Map();
 
   const allAssetStates =
     await parsers.storage.omnipool.getOmnipoolAssetsAll(currentBlockHeader);
@@ -60,7 +60,5 @@ export async function handleOmnipoolStorage(
     omnipoolAssetsData.set(newAssetDataEntity.id, newAssetDataEntity);
   }
 
-  ctx.batchState.state = {
-    omnipoolAssetsData,
-  };
+  await ctx.store.save([...omnipoolAssetsData.values()]);
 }

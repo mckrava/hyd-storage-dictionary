@@ -8,8 +8,8 @@ export async function handleXykPoolsStorage(
   ctx: ProcessorContext<Store>,
   currentBlockHeader: Block
 ): Promise<void> {
-  const xykPools = ctx.batchState.state.xykPools;
-  const xykPoolAssetsData = ctx.batchState.state.xykPoolAssetsData;
+  const xykPools: Map<string, XykPool> = new Map();
+  const xykPoolAssetsData: Map<string, XykPoolAssetsData> = new Map();
 
   const allPoolsWithAssets =
     await parsers.storage.xyk.getAllPoolsWithAssets(currentBlockHeader);
@@ -77,8 +77,6 @@ export async function handleXykPoolsStorage(
     xykPoolAssetsData.set(assetBData.id, assetBData);
   }
 
-  ctx.batchState.state = {
-    xykPools,
-    xykPoolAssetsData,
-  };
+  await ctx.store.save([...xykPools.values()]);
+  await ctx.store.save([...xykPoolAssetsData.values()]);
 }

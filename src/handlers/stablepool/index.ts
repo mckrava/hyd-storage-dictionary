@@ -16,8 +16,8 @@ export async function handleStablepoolStorage(
   ctx: ProcessorContext<Store>,
   currentBlockHeader: Block
 ): Promise<void> {
-  const stablepools = ctx.batchState.state.stablepools;
-  const stablepoolAssetsData = ctx.batchState.state.stablepoolAssetsData;
+  const stablepools: Map<string, Stablepool> = new Map();
+  const stablepoolAssetsData: Map<string, StablepoolAssetData> = new Map();
 
   const allPools = (
     await parsers.storage.stableswap.getPoolsAll(currentBlockHeader)
@@ -91,8 +91,6 @@ export async function handleStablepoolStorage(
     stablepools.set(newPoolEntity.id, newPoolEntity);
   }
 
-  ctx.batchState.state = {
-    stablepools,
-    stablepoolAssetsData,
-  };
+  await ctx.store.save([...stablepools.values()]);
+  await ctx.store.save([...stablepoolAssetsData.values()]);
 }
